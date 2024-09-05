@@ -1,0 +1,107 @@
+RewriteEngine On
+Options +FollowSymLinks
+
+<IfModule mod_headers.c>
+<FilesMatch "\.(svg|ttf|otf|eot|woff|woff2|ico|font.css|fonts.css|css|js)$">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+</IfModule>
+
+<ifModule mod_deflate.c>
+  <filesMatch ".(css|js|html|php)$">
+    SetOutputFilter DEFLATE
+  </filesMatch>
+  
+  <FilesMatch ".(flv|gif|jpg|jpeg|png|ico|swf|js|pdf)$">
+  Header set Cache-Control "max-age=2592000"
+</FilesMatch>
+
+</ifModule>
+
+
+
+# static
+RewriteRule ^$ 												index.php
+RewriteRule ^index/?$	 									index.php
+RewriteRule ^login/?$	 								    halaman/hal_user/cek_login.php
+RewriteRule ^logout/?$	 								    halaman/hal_user/logout.php
+RewriteRule ^home/?$	 									site.php?halamane=home
+RewriteRule ^error-404/?$	 							    site.php?halamane=error_404
+
+RewriteRule ^user-view/?$	 								site.php?halamane=user
+RewriteRule ^add-user/?$	 								site.php?halamane=user&act=tambahuser
+RewriteRule ^edit-user-(.*)/?$								site.php?halamane=user&act=edituser&id=$1 [L]
+RewriteRule ^hapus-user-(.*)/?$								halaman/hal_user/aksi_user.php?halamane=user&act=hapus&id=$1 [L]
+
+RewriteRule ^karyawan-view/?$	 							site.php?halamane=karyawan
+RewriteRule ^add-karyawan/?$	 							site.php?halamane=karyawan&act=tambahkaryawan
+RewriteRule ^edit-karyawan-(.*)/?$							site.php?halamane=karyawan&act=editkaryawan&id=$1 [L]
+RewriteRule ^hapus-karyawan-(.*)/?$							halaman/hal_karyawan/aksi_karyawan.php?halamane=karyawan&act=hapus&id=$1 [L]
+	
+RewriteRule ^tahun_penilaian-view/?$	 					site.php?halamane=tahun_penilaian
+RewriteRule ^add-tahun_penilaian/?$	 						site.php?halamane=tahun_penilaian&act=tambahtahun_penilaian
+RewriteRule ^edit-tahun_penilaian-(.*)/?$					site.php?halamane=tahun_penilaian&act=edittahun_penilaian&id=$1 [L]
+RewriteRule ^hapus-tahun_penilaian-(.*)/?$					halaman/hal_tahun_penilaian/aksi_tahun_penilaian.php?halamane=tahun_penilaian&act=hapus&id=$1 [L]
+
+RewriteRule ^kategori-view/?$	 							site.php?halamane=kategori
+RewriteRule ^add-kategori/?$	 							site.php?halamane=kategori&act=tambahkategori
+RewriteRule ^edit-kategori-(.*)/?$							site.php?halamane=kategori&act=editkategori&id=$1 [L]
+RewriteRule ^hapus-kategori-(.*)/?$							halaman/hal_kategori/aksi_kategori.php?halamane=kategori&act=hapus&id=$1 [L]
+
+RewriteRule ^kompetensi-view/?$	 							site.php?halamane=kompetensi
+RewriteRule ^add-kompetensi/?$	 							site.php?halamane=kompetensi&act=tambahkompetensi
+RewriteRule ^edit-kompetensi-(.*)/?$						site.php?halamane=kompetensi&act=editkompetensi&id=$1 [L]
+RewriteRule ^hapus-kompetensi-(.*)/?$						halaman/hal_kompetensi/aksi_kompetensi.php?halamane=kompetensi&act=hapus&id=$1 [L]
+
+RewriteRule ^rating-view/?$	 								site.php?halamane=rating
+RewriteRule ^add-rating/?$	 								site.php?halamane=rating&act=tambahrating
+RewriteRule ^edit-rating-(.*)/?$							site.php?halamane=rating&act=editrating&id=$1 [L]
+RewriteRule ^hapus-rating-(.*)/?$							halaman/hal_rating/aksi_rating.php?halamane=rating&act=hapus&id=$1 [L]
+
+RewriteRule ^transaksi-view/?$	 							site.php?halamane=transaksi
+RewriteRule ^add-transaksi-(.*)/?$		 					site.php?halamane=transaksi&act=tambahtransaksi&id=$1 [L]
+RewriteRule ^edit-transaksi-(.*)/?$							site.php?halamane=transaksi&act=edittransaksi&id=$1 [L]
+RewriteRule ^hapus-transaksi-(.*)/?$						halaman/hal_transaksi/aksi_transaksi.php?halamane=transaksi&act=hapus&id=$1 [L]
+RewriteRule ^rekap-transaksi-(.*)-(.*)/?$					site.php?halamane=transaksi&act=rekap-transaksi&id=$1&s=$2 [L]
+RewriteRule ^jump-to/?$				    					halaman/hal_transaksi/jump.php? [L]
+RewriteRule ^mutasi-view/?$	 								site.php?halamane=transaksi&act=mutasi
+
+
+RewriteRule ^print-transaksi-(.*)/?$					    halaman/hal_transaksi/print-transaksi.php?id=$1 [L]
+RewriteRule ^detail-transaksi-(.*)/?$					    site.php?halamane=transaksi&act=detailtransaksi&id=$1 [L]
+
+RewriteRule ^report-transaksi/?$	 						site.php?halamane=report
+RewriteRule ^report-transaksi-view/?$	 					halaman/hal_report/report-transaksi.php
+
+RewriteRule ^login-failed/?$	 							index.php?id=error
+
+
+
+
+ErrorDocument 404    										http://localhost/rental/error-404
+RewriteRule ^404/?$ 										404.php
+
+AddType image/svg+xml svg svgz
+AddType application/octet-stream .pdf
+
+
+# proc/self/environ? no way!
+RewriteCond %{QUERY_STRING} proc/self/environ [OR]
+ 
+# Block out any script trying to set a mosConfig value through the URL
+RewriteCond %{QUERY_STRING} mosConfig_[a-zA-Z_]{1,21}(=|\%3D) [OR]
+ 
+# Block out any script trying to base64_encode crap to send via URL
+RewriteCond %{QUERY_STRING} base64_encode.*(.*) [OR]
+ 
+# Block out any script that includes a <script> tag in URL
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+ 
+# Block out any script trying to set a PHP GLOBALS variable via URL
+RewriteCond %{QUERY_STRING} GLOBALS(=|[|\%[0-9A-Z]{0,2}) [OR]
+ 
+# Block out any script trying to modify a _REQUEST variable via URL
+RewriteCond %{QUERY_STRING} _REQUEST(=|[|\%[0-9A-Z]{0,2})
+ 
+# Send all blocked request to homepage with 403 Forbidden error!
+RewriteRule ^(.*)$ index.php [F,L]

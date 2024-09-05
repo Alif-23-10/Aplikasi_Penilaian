@@ -1,0 +1,31 @@
+UNTUK MENJALANKAN SCRIPT DI LOCALHOST
+=====================================
+
+- Disarankan memakai software Xampp 7.2.3
+- Apache/2.4.29 (Win32) OpenSSL/1.1.0g PHP/7.2.3
+- Database client version: libmysql - mysqlnd 5.0.12-dev
+- Ekstrak file penilaian.zip lalu letakkan pada folder htdocs pada Xampp anda.
+- Konfigurasi koneksi database,buka folder config dan persiksa file koneksi.php
+  Sesuaikan dengan nama databasenya misal "penilaian".
+  
+ $server = "localhost";
+ $username = "root";
+ $password = "";
+ $database = "penilaian";
+ (bila pada Xampp anda tidak di password kosongkan saja password)
+
+- Buka http://localhost/phpmyadmin dan buat nama database "penilaian".
+- Dumping atau import file penilaian.sql ke MySQL phpmyadmin pada folder penilaian/database
+- Jalankan browser http://localhost/penilaian
+- SELESAI
+
+
+UNTUK LOGIN KE APLIKASI
+============================
+-ketikan pada browser http://localhost/penilaian/
+-Login:
+Username: admin
+password: 123456
+
+Username: user
+password: 123456
